@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Url checker</title>
+    <script>
+      var currentUrl = window.location.href;
+      var check_all_urls_redirect = currentUrl + "update";
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+      <form id="url_add_form" action="" class="form-inline my-2 my-lg-0" method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div>
+          {{ url_add_form.url }}
+          {{ url_add_form.url.errors }}
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Добавить</button>
+      </form>
+      {% if errors.url_format_error_message %}
+      <div class="alert alert-warning" role="alert">
+        {{ errors.url_format_error_message }}
+      </div>
+      {% endif %}
+      {% if messages.url_already_exists %}
+      <div class="alert alert-warning" role="alert">
+        {{ messages.url_already_exists }}
+      </div>
+      {% endif %}
+      <button type="button" class="btn btn-info", href="#", onclick="window.location.href = check_all_urls_redirect;">Проверить все</button>
+    </nav>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">URL</th>
+          <th scope="col">Статус</th>
+          <th scope="col">Дата добавления</th>
+          <th scope="col">Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in url_records %}
+        <tr>
+          <td>{{ record.url }}</td>
+          <td>
+            {% if record.status %}
+              Доступен
+            {% else %}
+              Не доступен
+            {% endif %}
+          </td>
+          <td>{{ record.date_added }}</td>
+          <td>
+            <button type="button" class="btn btn-danger", onclick="window.location.href='{% url 'delete_url' record.id %}'">Удалить</button>
+            <button type="button" class="btn btn-info", onclick="window.location.href='{% url 'check_url' record.id %}'">Проверить</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
+</html>
