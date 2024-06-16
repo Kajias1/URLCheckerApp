@@ -9,7 +9,7 @@ services:
     environment:
       - DB_HOST=db
       - DB_PORT=${DB_PORT}
-    command: bash -c 'while ! nc -z db 5432; do sleep 1; done; python manage.py migrate --noinput; python manage.py runserver ${DB_HOST}:${DB_PORT}'
+    command: bash -c 'while ! nc -z db 5432; do sleep 1; done; python manage.py migrate --noinput; python manage.py runserver ${APP_HOST}:${APP_PORT}'
     volumes:
       - .:/app
     ports:
